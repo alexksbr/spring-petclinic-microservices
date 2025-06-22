@@ -2,9 +2,18 @@ services:
   mysql:
     image: mysql:8.4.5
     container_name: mysql
+    command:
+      - --server-id=42
+      - --binlog-format=ROW
+      - --binlog-row-metadata=FULL
+      - --log-bin=mysql-bin
+      - --binlog-do-db=petclinic
+      - --replicate-do-table=petclinic.visits
     environment:
       - MYSQL_ROOT_PASSWORD=petclinic
       - MYSQL_DATABASE=petclinic
+      - MYSQL_USER=debezium
+      - MYSQL_PASSWORD=dbz
     ports:
       - "3306:3306"
     deploy:
