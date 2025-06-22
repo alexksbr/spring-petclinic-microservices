@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  # Service to register Debezium connector after all containers are healthy
+  connector-setup:
+    image: alpine:latest
+    container_name: connector-setup
+    volumes:
+      - ./scripts/debezium-connector-config.json:/config.json:ro
+      - ./scripts/connector-setup.sh:/connector-setup.sh:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+      connect:
+        condition: service_started
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+    command: sh /connector-setup.sh
+    restart: "no" 

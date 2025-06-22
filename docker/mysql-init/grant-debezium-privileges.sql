@@ -1,0 +1,2 @@
+GRANT RELOAD, FLUSH_TABLES ON *.* TO 'debezium'@'%';
+FLUSH PRIVILEGES; 

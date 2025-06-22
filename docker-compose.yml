@@ -26,6 +26,8 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
+    volumes:
+      - ./docker/mysql-init/grant-debezium-privileges.sql:/docker-entrypoint-initdb.d/grant-debezium-privileges.sql:ro
 
   kafka:
     image: bitnami/kafka:3.7.0
