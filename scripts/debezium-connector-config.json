@@ -12,6 +12,7 @@
     "table.include.list": "petclinic.visits",
     "topic.prefix": "petclinic",
     "schema.history.internal.kafka.bootstrap.servers": "kafka:9092",
-    "schema.history.internal.kafka.topic": "schema_history"
+    "schema.history.internal.kafka.topic": "schema_history",
+    "snapshot.mode": "schema_only"
   }
 } 
