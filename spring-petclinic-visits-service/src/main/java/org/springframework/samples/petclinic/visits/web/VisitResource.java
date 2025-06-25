@@ -48,9 +48,11 @@ class VisitResource {
     private static final Logger log = LoggerFactory.getLogger(VisitResource.class);
 
     private final VisitRepository visitRepository;
+    private final VisitEventPublisher visitEventPublisher;
 
-    VisitResource(VisitRepository visitRepository) {
+    VisitResource(VisitRepository visitRepository, VisitEventPublisher visitEventPublisher) {
         this.visitRepository = visitRepository;
+        this.visitEventPublisher = visitEventPublisher;
     }
 
     @PostMapping("owners/*/pets/{petId}/visits")
@@ -61,7 +63,17 @@ class VisitResource {
 
         visit.setPetId(petId);
         log.info("Saving visit {}", visit);
-        return visitRepository.save(visit);
+        Visit savedVisit = visitRepository.save(visit);
+        
+        // Publish visit created event to Kafka
+        try {
+            visitEventPublisher.publishVisitCreatedEvent(savedVisit);
+        } catch (Exception e) {
+            log.error("Failed to publish visit created event for visit ID: {}", savedVisit.getId(), e);
+            // Note: We don't fail the request if event publishing fails
+        }
+        
+        return savedVisit;
     }
 
     @GetMapping("owners/*/pets/{petId}/visits")

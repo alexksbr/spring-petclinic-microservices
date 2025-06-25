@@ -116,6 +116,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=petclinic
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     deploy:
       resources:
         limits:
@@ -128,6 +129,8 @@ services:
       mysql:
         condition: service_healthy
       customers-service:
+        condition: service_started
+      kafka:
         condition: service_started
     ports:
      - 8082:8082
